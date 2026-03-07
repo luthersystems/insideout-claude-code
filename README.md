@@ -188,7 +188,6 @@ insideout-claude-code/
 
 - [InsideOut Platform](https://insideout.luthersystems.com)
 - [Standalone Web App](https://insideout.luthersystemsapp.com/) -- try InsideOut without Claude Code
-- [Kiro Power](https://github.com/luthersystems/insideout-power) -- InsideOut for Kiro IDE
 - [Luther Systems](https://luthersystems.com)
 - [Claude Code](https://claude.ai/code)
 

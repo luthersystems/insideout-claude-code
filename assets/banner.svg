@@ -41,8 +41,8 @@
   <text x="439" y="213" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8be8cc">GCP</text>
   <rect x="495" y="195" width="90" height="26" rx="13" fill="white" opacity="0.08"/>
   <text x="505" y="213" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8be8cc">Terraform</text>
-  <rect x="597" y="195" width="112" height="26" rx="13" fill="white" opacity="0.08"/>
-  <text x="609" y="213" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8be8cc">Kiro Power</text>
+  <rect x="597" y="195" width="120" height="26" rx="13" fill="white" opacity="0.08"/>
+  <text x="609" y="213" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#8be8cc">Claude Code</text>
   <!-- Powered by Luther Systems -->
   <text x="355" y="268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" fill="#49D9E6" opacity="0.7">Powered by Luther Systems</text>
 </svg>
