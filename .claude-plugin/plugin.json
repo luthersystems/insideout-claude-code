@@ -1,0 +1,29 @@
+{
+  "name": "insideout-claude-code",
+  "description": "AI-powered cloud infrastructure design, pricing, Terraform generation, and deployment for AWS & GCP",
+  "version": "1.0.0",
+  "author": {
+    "name": "Luther Systems",
+    "email": "contact@luthersystems.com",
+    "url": "https://luthersystems.com"
+  },
+  "homepage": "https://insideout.luthersystems.com",
+  "repository": "https://github.com/luthersystems/insideout-claude-code",
+  "license": "Apache-2.0",
+  "keywords": [
+    "infrastructure",
+    "cloud",
+    "aws",
+    "gcp",
+    "terraform",
+    "deployment",
+    "devops",
+    "iac",
+    "kubernetes",
+    "serverless",
+    "vpc",
+    "networking",
+    "docker",
+    "containers"
+  ]
+}

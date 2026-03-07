@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "insideout": {
+      "type": "http",
+      "url": "https://app.luthersystems.com/v1/insideout-mcp"
+    }
+  }
+}
