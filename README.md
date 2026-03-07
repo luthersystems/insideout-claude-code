@@ -43,7 +43,6 @@ InsideOut is a [Claude Code](https://claude.ai/code) plugin that brings AI-power
 | **AI/ML** | Bedrock | Vertex AI |
 | **CI/CD** | CodePipeline, GitHub Actions | Cloud Build |
 | **Backup** | AWS Backup | GCP Backups |
-| **Third-party** | Splunk, Datadog | Splunk, Datadog |
 
 ## Installation
 
