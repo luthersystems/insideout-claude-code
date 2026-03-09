@@ -1,0 +1,34 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "insideout-claude-code",
+  "description": "AI-powered cloud infrastructure design, pricing, Terraform generation, and deployment for AWS & GCP",
+  "owner": {
+    "name": "Luther Systems",
+    "email": "contact@luthersystems.com"
+  },
+  "plugins": [
+    {
+      "name": "insideout-claude-code",
+      "description": "AI-powered cloud infrastructure design, pricing, Terraform generation, and deployment for AWS & GCP",
+      "version": "1.0.0",
+      "author": {
+        "name": "Luther Systems",
+        "email": "contact@luthersystems.com"
+      },
+      "source": "./",
+      "homepage": "https://insideout.luthersystems.com",
+      "repository": "https://github.com/luthersystems/insideout-claude-code",
+      "license": "Apache-2.0",
+      "category": "deployment",
+      "keywords": [
+        "infrastructure",
+        "cloud",
+        "aws",
+        "gcp",
+        "terraform",
+        "deployment",
+        "devops"
+      ]
+    }
+  ]
+}
