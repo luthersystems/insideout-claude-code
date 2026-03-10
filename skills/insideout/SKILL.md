@@ -10,9 +10,9 @@ description: >
 version: 1.0.0
 ---
 
-# InsideOut -- AI-Powered Cloud Infrastructure Design
+# InsideOut -- Agentic Infrastructure Builder & Manager
 
-InsideOut is a cloud infrastructure design system by Luther Systems. It provides a conversational AI advisor named **Riley** who guides users through designing, pricing, generating Terraform, deploying, and managing cloud infrastructure on AWS and GCP.
+InsideOut is an agentic cloud infrastructure builder and manager by Luther Systems. Describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production. Riley -- your AI infrastructure advisor -- guides you through the entire lifecycle on AWS and GCP.
 
 **No authentication or API keys required.** The plugin connects to a hosted MCP server.
 

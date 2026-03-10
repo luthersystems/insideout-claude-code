@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "insideout-claude-code",
-  "description": "AI-powered cloud infrastructure design, pricing, Terraform generation, and deployment for AWS & GCP",
+  "description": "Agentic cloud infrastructure builder & manager. Describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production.",
   "owner": {
     "name": "Luther Systems",
     "email": "contact@luthersystems.com"
@@ -9,7 +9,8 @@
   "plugins": [
     {
       "name": "insideout-claude-code",
-      "description": "AI-powered cloud infrastructure design, pricing, Terraform generation, and deployment for AWS & GCP",
+      "displayName": "InsideOut Agentic Infrastructure Builder & Manager",
+      "description": "Agentic cloud infrastructure builder & manager. Describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production.",
       "version": "1.0.0",
       "author": {
         "name": "Luther Systems",
@@ -27,7 +28,21 @@
         "gcp",
         "terraform",
         "deployment",
-        "devops"
+        "devops",
+        "database",
+        "kubernetes",
+        "serverless",
+        "vpc",
+        "networking",
+        "docker",
+        "containers",
+        "ecs",
+        "eks",
+        "rds",
+        "s3",
+        "lambda",
+        "compute",
+        "iac"
       ]
     }
   ]

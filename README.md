@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="InsideOut -- AI-Powered Cloud Infrastructure Design" width="100%">
+  <img src="assets/banner.svg" alt="InsideOut -- Agentic Infrastructure Builder & Manager" width="100%">
 </p>
 
 <p align="center">
-  <strong>Design, price, and deploy production-ready AWS & GCP infrastructure through conversational AI</strong>
+  <strong>Agentic cloud infrastructure builder & manager -- describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production</strong>
 </p>
 
 <p align="center">
@@ -16,18 +16,18 @@
 
 ## What is InsideOut?
 
-InsideOut is a [Claude Code](https://claude.ai/code) plugin that brings AI-powered cloud infrastructure design directly into your terminal. Describe what you want to build in plain language, and Riley -- your AI infrastructure advisor -- guides you through selecting services, configuring them, estimating costs, generating Terraform, and deploying to AWS or GCP.
+InsideOut is a [Claude Code](https://claude.ai/code) plugin that brings agentic cloud infrastructure management directly into your terminal. Describe your goal in plain language, and Riley -- your AI infrastructure advisor -- guides you through requirements, service selection, cost estimation, Terraform generation, deployment, and ongoing production management on AWS or GCP.
 
-**No authentication or API keys required.** Install the plugin and start designing.
+**No authentication or API keys required.** Install the plugin and start building.
 
 ### What You Can Do
 
-- **Design infrastructure conversationally** -- describe your app, get expert recommendations
-- **Get real-time cost estimates** -- see monthly costs as components are added
+- **Describe your goal** -- tell Riley what you're building, get expert infrastructure recommendations
+- **Discuss requirements** -- refine architecture, regions, compliance, scaling needs interactively
+- **Estimate cost** -- see real-time monthly cost estimates as components are added
 - **Generate Terraform** -- production-ready, modular code with security best practices
-- **Deploy with one command** -- deploy directly to AWS or GCP from the conversation
-- **Inspect deployments** -- verify what was actually provisioned in your cloud account
-- **Compare providers** -- evaluate AWS vs GCP options side-by-side
+- **Deploy** -- deploy directly to AWS or GCP from the conversation
+- **Operate and manage** -- inspect deployments, detect drift, monitor logs, roll back changes
 
 ### Supported Services (50+)
 
@@ -46,17 +46,17 @@ InsideOut is a [Claude Code](https://claude.ai/code) plugin that brings AI-power
 
 ## Installation
 
-### From GitHub
+### From GitHub (in Claude Code)
 
-```bash
-/plugin install insideout-claude-code@luthersystems/insideout-claude-code
-```
+1. Add the marketplace:
+   ```
+   /plugin marketplace add luthersystems/insideout-claude-code
+   ```
 
-Or in Claude Code:
-
-1. Type `/plugin`
-2. Select **Discover**
-3. Search for "insideout"
+2. Install the plugin:
+   ```
+   /plugin install insideout-claude-code
+   ```
 
 ### For Development
 
@@ -65,27 +65,22 @@ git clone https://github.com/luthersystems/insideout-claude-code.git
 claude --plugin-dir ./insideout-claude-code
 ```
 
-### Test Environment Override
+### Custom MCP Server URL
 
-The plugin connects to production by default. To use the test environment, create a `.mcp.local.json` in the plugin directory:
+Use the `/insideout-claude-code:insideout-connect` command to point at a different server:
 
-```json
-{
-  "mcpServers": {
-    "insideout": {
-      "type": "http",
-      "url": "https://app-test.luthersystems.com/v1/insideout-mcp"
-    }
-  }
-}
+```
+/insideout-claude-code:insideout-connect local                    # localhost:8080
+/insideout-claude-code:insideout-connect https://custom.url/mcp   # custom URL
+/insideout-claude-code:insideout-connect prod                     # reset to production
 ```
 
 ## Quick Start
 
-Use the `/insideout` command or just mention infrastructure in your conversation:
+Use the `/insideout-claude-code:insideout` command or just mention infrastructure in your conversation:
 
 ```
-You: /insideout I need cloud infrastructure for a web app
+You: /insideout-claude-code:insideout I need cloud infrastructure for a web app
 
 Riley: "Hi! I'm Riley, your infrastructure advisor. Tell me about the app
         you're building -- what does it do, who uses it, and what scale
@@ -156,10 +151,12 @@ The conversation flows through these agents automatically. From your perspective
 ```
 insideout-claude-code/
 ├── .claude-plugin/
-│   └── plugin.json              # Plugin metadata
+│   ├── plugin.json              # Plugin metadata
+│   └── marketplace.json         # Self-hosted marketplace definition
 ├── .mcp.json                    # MCP server configuration (prod)
 ├── commands/
-│   └── insideout.md             # /insideout slash command
+│   ├── insideout.md             # /insideout slash command
+│   └── insideout-connect.md     # /insideout-connect server switching
 ├── skills/
 │   └── insideout/
 │       └── SKILL.md             # Agent guidance and activation triggers
