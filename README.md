@@ -176,7 +176,7 @@ insideout-claude-code/
 ├── assets/
 │   ├── banner.svg
 │   ├── demo.gif
-│   ├── demo.tape
+│   ├── record-demo.sh
 │   └── logo.svg
 ├── README.md
 └── LICENSE
