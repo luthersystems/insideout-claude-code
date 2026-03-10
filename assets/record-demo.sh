@@ -261,6 +261,7 @@ generate_gif() {
   echo "▶ Generating GIF with agg..."
 
   agg \
+    --font-family "JetBrains Mono,Iosevka Nerd Font Mono" \
     --font-size 14 \
     --theme dracula \
     --speed 2 \
