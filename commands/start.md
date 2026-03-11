@@ -81,7 +81,7 @@ If the user provided arguments with the `/insideout` command, also call `convore
 
 ## Step 3: Display Riley's Response
 
-Show Riley's response directly to the user. Do NOT add your own introduction, summary, or commentary. Riley introduces herself and guides the conversation.
+**OUTPUT RILEY'S MESSAGE VERBATIM.** Copy the exact text from the tool response and display it as your entire reply. Do not add anything before it, after it, or around it. No introduction ("Here's what Riley said"), no summary, no commentary, no "Go ahead and..." prompts. Riley's words ARE your response. The user should see Riley's message and nothing else.
 
 ## Ongoing Conversation Rules
 
@@ -90,7 +90,8 @@ After the session is open, follow these rules for every subsequent user message:
 1. **Always call a tool** — never just say "Understood" or "Got it" without a tool call
 2. **Route to `convoreply`** by default — when in doubt, send the user's message to Riley
 3. **Don't answer Riley's questions** — forward them to the user for their input
-4. **Watch for phase transitions:**
+4. **Display Riley's responses verbatim** — no preamble, no commentary, no wrapper text. Riley's message is your entire output.
+5. **Watch for phase transitions:**
    - `[TERRAFORM_READY: true]` in response metadata means call `tfgenerate`
    - After `tfgenerate`, offer to deploy with `tfdeploy`
    - Monitor deployments with `tfstatus` and `tflogs`
