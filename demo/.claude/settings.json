@@ -2,7 +2,7 @@
   "permissions": {
     "allow": [
       "mcp__insideout__*",
-      "mcp__plugin_insideout-claude-code_insideout__*",
+      "mcp__plugin_insideout_insideout__*",
       "Skill",
       "Bash(mkdir:*)",
       "Bash(curl:*)",

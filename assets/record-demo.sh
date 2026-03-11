@@ -88,14 +88,17 @@ wait_for_prompt() {
     echo "    (no processing detected, checking if already done...)"
   fi
 
-  # Phase 2: Wait for Claude to finish — no spinners, no tool calls in progress
+  # Phase 2: Wait for Claude to finish — require two consecutive idle checks
+  # to avoid false positives from screen refresh gaps
   echo "    (waiting for response to complete...)"
+  local idle_count=0
   while [ "$elapsed" -lt "$timeout" ]; do
     # Auto-approve any permission dialogs
     approve_dialogs 2>/dev/null || true
 
     local screen
     screen=$(tmux capture-pane -t "$TMUX_SESSION" -p 2>/dev/null)
+    local is_idle=false
     # Status bar with context % means Claude Code UI is loaded
     if echo "$screen" | grep -q "ctx:"; then
       # Not in a dialog
@@ -103,15 +106,24 @@ wait_for_prompt() {
         # Not in a permission prompt
         if ! echo "$screen" | grep -q "Do you want to proceed"; then
           # No active spinners or processing indicators
-          if ! echo "$screen" | grep -qE "⠋|⠙|⠹|⠸|⠼|⠴|⠦|⠧|⠇|⠏|◐|◑|◒|◓|Thinking|thinking|Running|Lollygagging|queued|Press up to edit"; then
-            sleep 5  # Extra buffer to let final text render
-            return 0
+          if ! echo "$screen" | grep -qE "⠋|⠙|⠹|⠸|⠼|⠴|⠦|⠧|⠇|⠏|◐|◑|◒|◓|\(thinking\)|Running|queued|Press up to edit"; then
+            is_idle=true
           fi
         fi
       fi
     fi
-    sleep 3
-    elapsed=$((elapsed + 3))
+
+    if [ "$is_idle" = true ]; then
+      idle_count=$((idle_count + 1))
+      if [ "$idle_count" -ge 3 ]; then
+        sleep 3  # Final buffer
+        return 0
+      fi
+    else
+      idle_count=0
+    fi
+    sleep 5
+    elapsed=$((elapsed + 5))
   done
   echo "⚠ Timeout waiting for prompt ($timeout s)"
   return 1
@@ -188,54 +200,78 @@ run_record() {
   sleep 2
   echo "  ✓ Claude Code is ready"
 
-  # Step 1: Send /insideout command
-  echo ""
-  echo "  Step 1: Starting InsideOut session..."
-  tmux send-keys -t "$TMUX_SESSION" "/insideout-claude-code:insideout" Enter
+  # ─── Conversation: scripted user input, natural Claude/Riley responses ───
+  # Each step sends a user message via tmux (appears as typed input at the ❯
+  # prompt), then waits for Claude to finish responding before sending the next.
 
-  # Wait for Riley's greeting (convoopen + initial response)
-  echo "  Waiting for Riley to respond..."
-  wait_for_prompt 180
+  # Helper: wait for Claude to be idle (not thinking/running/processing)
+  # Uses double-check with 15s pause to avoid false positives.
+  wait_idle() {
+    local max="${1:-300}"
+    local elapsed=0
+    sleep 5  # Let Claude start processing
+    elapsed=5
+    while [ "$elapsed" -lt "$max" ]; do
+      approve_dialogs 2>/dev/null || true
+      local screen
+      screen=$(tmux capture-pane -t "$TMUX_SESSION" -p 2>/dev/null)
+      if echo "$screen" | grep -q "ctx:"; then
+        if ! echo "$screen" | grep -qE "\(thinking\)|Running|queued|Press up to edit|█.*[0-9]+%|processing|tokens\)|⠋|⠙|⠹|⠸|⠼|⠴|⠦|⠧|⠇|⠏|◐|◑|◒|◓"; then
+          sleep 15
+          screen=$(tmux capture-pane -t "$TMUX_SESSION" -p 2>/dev/null)
+          if echo "$screen" | grep -q "ctx:"; then
+            if ! echo "$screen" | grep -qE "\(thinking\)|Running|queued|Press up to edit|█.*[0-9]+%|processing|tokens\)|⠋|⠙|⠹|⠸|⠼|⠴|⠦|⠧|⠇|⠏|◐|◑|◒|◓"; then
+              return 0
+            fi
+          fi
+        fi
+      fi
+      sleep 10
+      elapsed=$((elapsed + 10))
+    done
+    echo "  ⚠ Timeout after ${max}s"
+    return 1
+  }
+
+  # Step 1: Start InsideOut session
+  echo ""
+  echo "  Step 1: /insideout:start"
+  tmux send-keys -t "$TMUX_SESSION" "/insideout:start" Enter
+  wait_idle 180
   echo "  ✓ Riley responded"
 
-  # Step 2: Describe the app
+  # Step 2: Describe the app (appears as typed user input)
   echo ""
-  echo "  Step 2: Describing the app to Riley..."
-  tmux send-keys -t "$TMUX_SESSION" "I am building a video streaming platform like Netflix. Serverless architecture on AWS with Lambda for compute, API Gateway as the front door, S3 for video assets, DynamoDB for metadata, and GitHub Actions for CI/CD." Enter
+  echo "  Step 2: Describe app"
+  tmux send-keys -t "$TMUX_SESSION" "I'm building a serverless video streaming platform on AWS with GitHub Actions for CI/CD." Enter
+  wait_idle 300
+  echo "  ✓ Riley responded with recommendations"
 
-  echo "  Waiting for Riley's recommendations..."
-  wait_for_prompt 180
-  echo "  ✓ Riley responded"
-
-  # Step 3: Confirm and ask for pricing
+  # Step 3: Accept and ask for pricing
   echo ""
-  echo "  Step 3: Confirming configuration..."
-  tmux send-keys -t "$TMUX_SESSION" "The configuration looks good. Proceed to pricing." Enter
-
-  echo "  Waiting for pricing..."
-  wait_for_prompt 180
+  echo "  Step 3: Accept config, request pricing"
+  tmux send-keys -t "$TMUX_SESSION" "Looks great, proceed to pricing." Enter
+  wait_idle 300
   echo "  ✓ Pricing received"
 
   # Step 4: Generate Terraform
   echo ""
-  echo "  Step 4: Requesting Terraform generation..."
+  echo "  Step 4: Generate Terraform"
   tmux send-keys -t "$TMUX_SESSION" "Generate the Terraform." Enter
-
-  echo "  Waiting for Terraform generation..."
-  wait_for_prompt 180
+  wait_idle 300
   echo "  ✓ Terraform generated"
 
   # Exit Claude Code
   echo ""
   echo "  Exiting Claude Code..."
   tmux send-keys -t "$TMUX_SESSION" "/exit" Enter
-  sleep 3
+  sleep 5
 
-  # Wait for tmux session to end (asciinema finishes)
-  local timeout=10
-  while tmux has-session -t "$TMUX_SESSION" 2>/dev/null && [ "$timeout" -gt 0 ]; do
+  # Wait for tmux session to end
+  local exit_timeout=15
+  while tmux has-session -t "$TMUX_SESSION" 2>/dev/null && [ "$exit_timeout" -gt 0 ]; do
     sleep 1
-    timeout=$((timeout - 1))
+    exit_timeout=$((exit_timeout - 1))
   done
   tmux kill-session -t "$TMUX_SESSION" 2>/dev/null || true
 
@@ -261,7 +297,7 @@ generate_gif() {
   echo "▶ Generating GIF with agg..."
 
   agg \
-    --font-family "JetBrains Mono,Iosevka Nerd Font Mono" \
+    --font-family "Iosevka Nerd Font Mono,JetBrainsMono Nerd Font" \
     --font-size 14 \
     --theme dracula \
     --speed 2 \
