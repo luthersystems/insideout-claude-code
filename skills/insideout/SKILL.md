@@ -124,6 +124,16 @@ Only include lines where something was detected. Always include the IDE line.
 
 **Never respond with only "Understood", "Got it", or any acknowledgement without calling a tool.**
 
+### Handling Timeouts (CRITICAL)
+
+Riley's responses can take 20-60 seconds. When `convoreply` returns a response where `status` is `"processing"` or the response is empty/incomplete:
+
+1. **Call `convoawait`** with the same `session_id` — this polls for the completed response
+2. **NEVER call `convoreply` again with the same message** — this sends a duplicate and confuses the conversation
+3. If `convoawait` also times out, call it again (it is idempotent and safe to retry)
+
+The pattern is always: `convoreply` once -> if not ready -> `convoawait` (repeat until ready).
+
 ### Phase Transitions
 
 | Phase | Signal | Action |
@@ -180,7 +190,7 @@ The InsideOut MCP server is remote (HTTPS) -- no local binary needed. If tools f
 Session IDs must start with `sess_v2_`. Always use the ID returned by `convoopen`. Never guess or fabricate IDs.
 
 ### Timeouts
-Use `convoawait` if `convoreply` times out. Complex designs may take 30-50 seconds to process.
+**Always use `convoawait` if `convoreply` returns a processing/incomplete response.** Never resend the same message with `convoreply` — that creates duplicates. Complex designs may take 30-60 seconds to process; `convoawait` is the correct way to poll for completion.
 
 ### Deployment takes too long
 This is normal. Terraform deployments take 15-30 minutes (EKS clusters alone take 15-20 minutes). Use `tflogs` to monitor progress.

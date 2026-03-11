@@ -20,6 +20,10 @@ InsideOut is a [Claude Code](https://claude.ai/code) plugin that brings agentic 
 
 **No authentication or API keys required.** Install the plugin and start building.
 
+<p align="center">
+  <img src="assets/demo.gif" alt="InsideOut demo — design, price, and deploy infrastructure from your terminal" width="700">
+</p>
+
 ### What You Can Do
 
 - **Describe your goal** -- tell Riley what you're building, get expert infrastructure recommendations
@@ -107,6 +111,8 @@ You: "Deploy it"
 
 InsideOut automatically scans your workspace to detect your tech stack, framework, existing infrastructure, and target cloud provider. This gives Riley immediate context about your project so she can tailor recommendations from the start.
 
+> **New to InsideOut?** See the [Getting Started Guide](steering/getting-started.md) for a detailed step-by-step walkthrough.
+
 ## Available Tools
 
 | Tool | Description |
@@ -169,10 +175,25 @@ insideout-claude-code/
 │   └── troubleshooting-guide.md
 ├── assets/
 │   ├── banner.svg
+│   ├── demo.gif
+│   ├── record-demo.sh
 │   └── logo.svg
 ├── README.md
 └── LICENSE
 ```
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| **No tools appear** | Plugin not installed correctly. Run `/plugin install insideout-claude-code@luthersystems/insideout-claude-code` and restart Claude Code. |
+| **Session expired / invalid session_id** | Start a new conversation with `convoopen`. Session IDs must start with `sess_v2_` -- never guess or reuse old IDs. |
+| **Credentials not found** | Use `credawait` to link your AWS or GCP credentials before deploying. |
+| **Conversation timeout** | Use `convoawait` to continue waiting for Riley's response. For complex designs, set timeouts to 50-55 seconds. |
+| **Terraform generation fails** | Retry `tfgenerate` with `include_code: true` to get Terraform inline instead of via download URL. |
+| **Deployment takes too long** | This is normal -- infrastructure provisioning takes 15-30 minutes. Use `tflogs` to monitor progress. |
+
+For more details, see the full [Troubleshooting Guide](steering/troubleshooting-guide.md).
 
 ## Contributing
 
