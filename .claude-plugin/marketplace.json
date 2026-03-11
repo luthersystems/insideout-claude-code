@@ -9,7 +9,6 @@
   "plugins": [
     {
       "name": "insideout-claude-code",
-      "displayName": "InsideOut Agentic Infrastructure Builder & Manager",
       "description": "Agentic cloud infrastructure builder & manager. Describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production.",
       "version": "1.0.0",
       "author": {
