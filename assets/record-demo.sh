@@ -149,7 +149,7 @@ run_record() {
 
   # Launch tmux → asciinema → claude from the temp directory
   tmux new-session -d -s "$TMUX_SESSION" -x 100 -y 30 -c "$WORK_DIR" \
-    "unset CLAUDECODE && stty cols 100 rows 30 2>/dev/null; asciinema rec '$CAST_FILE' --cols 100 --rows 30 --overwrite --command 'claude --plugin-dir $PLUGIN_DIR --model sonnet'"
+    "unset CLAUDECODE && stty cols 100 rows 30 2>/dev/null; asciinema rec '$CAST_FILE' --cols 100 --rows 30 --overwrite --command 'claude --plugin-dir $PLUGIN_DIR --model opus'"
   # Resize the tmux window to enforce dimensions
   tmux resize-window -t "$TMUX_SESSION" -x 100 -y 30 2>/dev/null || true
 
@@ -170,6 +170,13 @@ run_record() {
     sleep 5
   fi
 
+  # Dismiss welcome/splash screen if present
+  if tmux capture-pane -t "$TMUX_SESSION" -p 2>/dev/null | grep -q "Welcome back"; then
+    echo "  Dismissing welcome screen..."
+    tmux send-keys -t "$TMUX_SESSION" Escape
+    sleep 3
+  fi
+
   # Wait for Claude Code input prompt (the actual input line, not menu selector)
   echo "  Waiting for Claude Code to start..."
   local tries=0
@@ -178,7 +185,7 @@ run_record() {
     screen=$(tmux capture-pane -t "$TMUX_SESSION" -p 2>/dev/null)
     # Check for the input prompt: a line starting with ❯ followed by a space and cursor
     # but NOT a menu (which has numbered options below)
-    if echo "$screen" | grep -q "Sonnet.*ctx:" ; then
+    if echo "$screen" | grep -q "ctx:" ; then
       # Status bar is visible = Claude Code is at the input prompt
       # Make sure no dialog is active
       if ! echo "$screen" | grep -q "Enter to confirm"; then
@@ -294,20 +301,15 @@ generate_gif() {
     exit 1
   fi
 
-  echo "▶ Generating GIF with agg..."
+  echo "▶ Generating GIF with Playwright + asciinema-player..."
 
-  agg \
-    --font-family "Iosevka Nerd Font Mono,JetBrainsMono Nerd Font" \
-    --font-size 14 \
-    --theme dracula \
-    --speed 2 \
-    --last-frame-duration 4 \
-    --idle-time-limit 5 \
-    "$CAST_FILE" \
-    "$GIF_OUTPUT"
+  # Ensure Playwright dependencies are installed
+  if [ ! -d "$REPO_ROOT/.tmp/node_modules/playwright" ]; then
+    echo "  Installing Playwright..."
+    (cd "$REPO_ROOT/.tmp" && npm init -y 2>/dev/null && npm install playwright 2>/dev/null && npx playwright install chromium 2>/dev/null)
+  fi
 
-  size=$(du -h "$GIF_OUTPUT" | cut -f1)
-  echo "✓ GIF saved to $GIF_OUTPUT ($size)"
+  NODE_PATH="$REPO_ROOT/.tmp/node_modules" node "$REPO_ROOT/assets/render-gif.mjs" "$CAST_FILE"
 }
 
 # ─── Main ───
