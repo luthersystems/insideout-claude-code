@@ -77,6 +77,8 @@ Use the `/insideout:connect` command to point at a different server:
 
 ## Quick Start
 
+On first use, Claude Code will ask to approve the InsideOut MCP tools -- select **"Yes, and don't ask again"**. This is a one-time prompt.
+
 Use the `/insideout:start` command or just mention infrastructure in your conversation:
 
 ```
