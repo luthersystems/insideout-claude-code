@@ -55,7 +55,7 @@ InsideOut is a [Claude Code](https://claude.ai/code) plugin that brings agentic 
 
 2. Install the plugin:
    ```
-   /plugin install insideout-claude-code
+   /plugin install insideout
    ```
 
 ### For Development
@@ -67,20 +67,22 @@ claude --plugin-dir ./insideout-claude-code
 
 ### Custom MCP Server URL
 
-Use the `/insideout-claude-code:insideout-connect` command to point at a different server:
+Use the `/insideout:connect` command to point at a different server:
 
 ```
-/insideout-claude-code:insideout-connect local                    # localhost:8080
-/insideout-claude-code:insideout-connect https://custom.url/mcp   # custom URL
-/insideout-claude-code:insideout-connect prod                     # reset to production
+/insideout:connect local                    # localhost:8080
+/insideout:connect https://custom.url/mcp   # custom URL
+/insideout:connect prod                     # reset to production
 ```
 
 ## Quick Start
 
-Use the `/insideout-claude-code:insideout` command or just mention infrastructure in your conversation:
+On first use, Claude Code will ask to approve the InsideOut MCP tools -- select **"Yes, and don't ask again"**. This is a one-time prompt.
+
+Use the `/insideout:start` command or just mention infrastructure in your conversation:
 
 ```
-You: /insideout-claude-code:insideout I need cloud infrastructure for a web app
+You: /insideout:start I need cloud infrastructure for a web app
 
 Riley: "Hi! I'm Riley, your infrastructure advisor. Tell me about the app
         you're building -- what does it do, who uses it, and what scale
@@ -155,8 +157,8 @@ insideout-claude-code/
 │   └── marketplace.json         # Self-hosted marketplace definition
 ├── .mcp.json                    # MCP server configuration (prod)
 ├── commands/
-│   ├── insideout.md             # /insideout slash command
-│   └── insideout-connect.md     # /insideout-connect server switching
+│   ├── start.md                 # /insideout:start slash command
+│   └── connect.md               # /insideout:connect server switching
 ├── skills/
 │   └── insideout/
 │       └── SKILL.md             # Agent guidance and activation triggers

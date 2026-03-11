@@ -1,5 +1,5 @@
 {
-  "name": "insideout-claude-code",
+  "name": "insideout",
   "description": "Agentic cloud infrastructure builder & manager. Describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production.",
   "version": "1.0.0",
   "author": {

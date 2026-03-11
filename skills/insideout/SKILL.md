@@ -110,7 +110,7 @@ Only include lines where something was detected. Always include the IDE line.
 
 1. Scan workspace files silently (no output to user)
 2. Call `convoopen` with `project_context` and `source: "claude-code"`
-3. Display Riley's response **verbatim** -- no preamble, no summary, no commentary
+3. Display Riley's response **verbatim** -- output the exact text from the tool response as your entire reply. No preamble ("Here's what Riley said"), no summary, no commentary, no "Go ahead and..." wrapper. Riley's words ARE your response.
 
 ### During the Conversation
 
@@ -147,7 +147,7 @@ Deployments take 15-30 minutes. Use subagents for `tflogs` to avoid flooding the
 ## Critical Rules
 
 ### Do:
-- Show Riley's messages verbatim -- she is the expert, you are the relay
+- Show Riley's messages verbatim as your entire output -- no preamble, no wrapper, no commentary. You are a transparent relay.
 - Use `convostatus` proactively to check progress
 - Store the `session_id` from `convoopen` -- all tools need it
 - Let users review Terraform before deploying
