@@ -58,7 +58,7 @@ mkdirSync(FRAMES_DIR, { recursive: true });
 console.log('Launching browser...');
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage();
-await page.setViewportSize({ width: 1200, height: 750 });
+await page.setViewportSize({ width: 1200, height: 800 });
 
 await page.goto(`http://localhost:${port}/`, { waitUntil: 'networkidle' });
 await page.waitForSelector('.ap-player', { timeout: 15000 });
