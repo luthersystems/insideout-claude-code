@@ -27,7 +27,7 @@ This is a **thin MCP client** — there is no compiled source code, build system
 ```
 .claude-plugin/     Plugin metadata (plugin.json, marketplace.json)
 .mcp.json           MCP server connection config (prod endpoint)
-commands/           Slash command definitions (/insideout:start, /insideout:connect)
+commands/           Slash command definitions (/insideout:start)
 skills/insideout/   SKILL.md — activation triggers, tool catalog, conversation flow rules
 steering/           User-facing guides (getting-started, design patterns, troubleshooting)
 assets/             SVG banner and logo
@@ -37,13 +37,14 @@ assets/             SVG banner and logo
 
 - `skills/insideout/SKILL.md` — Core file: defines activation triggers, all MCP tools, and conversation flow rules
 - `commands/start.md` — The `/insideout:start` slash command implementation with workspace scanning logic
-- `commands/connect.md` — The `/insideout:connect` command for switching MCP server URL
 - `.mcp.json` — MCP server URL (https://app.luthersystems.com/v1/insideout-mcp)
 - `steering/aws-design-patterns.md` / `gcp-design-patterns.md` — Pre-built infrastructure patterns
 
 ## Development
 
 All changes are Markdown or JSON edits. No compilation or dependencies.
+
+For local plugin development, keep `.mcp.json` production-only and use a gitignored `.mcp.local.json` file for any developer-specific MCP endpoint override.
 
 **Test locally:**
 ```

@@ -69,16 +69,6 @@ git clone https://github.com/luthersystems/insideout-claude-code.git
 claude --plugin-dir ./insideout-claude-code
 ```
 
-### Custom MCP Server URL
-
-Use the `/insideout:connect` command to point at a different server:
-
-```
-/insideout:connect local                    # localhost:8080
-/insideout:connect https://custom.url/mcp   # custom URL
-/insideout:connect prod                     # reset to production
-```
-
 ## Quick Start
 
 On first use, Claude Code will ask to approve the InsideOut MCP tools -- select **"Yes, and don't ask again"**. This is a one-time prompt.
@@ -163,8 +153,7 @@ insideout-claude-code/
 │   └── marketplace.json         # Self-hosted marketplace definition
 ├── .mcp.json                    # MCP server configuration (prod)
 ├── commands/
-│   ├── start.md                 # /insideout:start slash command
-│   └── connect.md               # /insideout:connect server switching
+│   └── start.md                 # /insideout:start slash command
 ├── skills/
 │   └── insideout/
 │       └── SKILL.md             # Agent guidance and activation triggers
@@ -200,8 +189,26 @@ For more details, see the full [Troubleshooting Guide](steering/troubleshooting-
 1. Fork this repository
 2. Create a feature branch: `git checkout -b feature/my-improvement`
 3. Make your changes
-4. Test locally: `claude --plugin-dir ./`
-5. Submit a pull request
+4. For local plugin development, keep `.mcp.json` pointed at production and create a gitignored `.mcp.local.json` override when you need a non-production MCP endpoint
+5. Test locally: `claude --plugin-dir ./`
+6. Submit a pull request
+
+### Local MCP Override for Development
+
+The distributed plugin is production-only. For local development, you can override the MCP server on your machine by creating a gitignored `.mcp.local.json` file next to `.mcp.json`.
+
+```json
+{
+  "mcpServers": {
+    "insideout": {
+      "type": "http",
+      "url": "http://<your-dev-or-staging-host>/mcp"
+    }
+  }
+}
+```
+
+Keep environment-specific hostnames out of committed files and internal-only endpoints out of public documentation.
 
 ## License
 
