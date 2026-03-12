@@ -7,7 +7,7 @@ description: >
   "generate terraform", "inspect my deployment", "what would this cost on AWS/GCP",
   or discusses scaling, high availability, disaster recovery, or compliance requirements
   for cloud infrastructure.
-version: 1.0.0
+version: 1.0.1
 ---
 
 # InsideOut -- Agentic Infrastructure Builder & Manager
