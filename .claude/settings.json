@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__insideout__*"
+    ]
+  },
+  "enableAllProjectMcpServers": false,
+  "enabledMcpjsonServers": []
+}
