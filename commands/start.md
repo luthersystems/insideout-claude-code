@@ -8,73 +8,49 @@ allowed-tools: [Read, Glob, Grep, Bash, mcp__insideout__convoopen, mcp__insideou
 
 You are starting an InsideOut infrastructure design session. Follow these steps precisely:
 
-## Step 1: Scan Workspace for Project Context
+## Step 1: Build Project Context
 
-Before calling any InsideOut tools, silently scan the user's workspace to build a `project_context` string. This gives Riley (the infrastructure advisor) immediate context about the user's tech stack.
+Before calling any InsideOut tools, put together a short project context summary for Riley (the infrastructure advisor). Base this on what you already know about the user's project -- from the working directory, recent conversation, or what they've told you.
 
-**Scan these files/patterns** (check existence, extract key fields only):
+**Include whichever of these apply:**
 
-| File / Pattern | What to extract |
-|---|---|
-| `package.json` | Runtime, framework, key deps (pg, redis, prisma, aws-sdk, etc.) |
-| `requirements.txt`, `pyproject.toml`, `Pipfile` | Python version, framework, key deps |
-| `go.mod` | Go version, key deps (gin, echo, pgx, go-redis) |
-| `Cargo.toml` | Rust edition, key deps |
-| `pom.xml`, `build.gradle` | Java/Kotlin framework, key deps |
-| `Gemfile` | Ruby version, framework, key deps |
-| `Dockerfile`, `docker-compose.yml` | Container usage, service images, exposed ports |
-| `*.tf`, `terraform/` | Existing IaC provider and resource types |
-| `serverless.yml` | Serverless Framework, provider |
-| `.github/workflows/`, `.gitlab-ci.yml` | CI/CD platform |
-| `k8s/`, `kubernetes/`, `helm/` | Kubernetes usage, chart dependencies |
-| `README.md` | Project description (first ~30 lines) |
-| `.env`, `.env.example` | Environment variable names (NOT values) — database URLs, API keys, service names |
-| `Makefile` | Build targets, deployment commands |
-| `Procfile`, `app.yaml` | Platform deployment targets |
+| Detail | Why Riley needs it | Example |
+|---|---|---|
+| Language and framework | Determines compute type (Lambda vs ECS vs EC2), runtime constraints | "Node.js 20, Next.js 15" |
+| Database and services | Shapes data tier and caching recommendations | "PostgreSQL, Redis" |
+| Container usage | Informs orchestration choice (ECS, EKS, Cloud Run) | "Docker Compose, 3 services" |
+| Existing infrastructure-as-code | Avoids conflicting with what's already provisioned | "Terraform with ECS + RDS" |
+| CI/CD platform | Integrates deployment pipeline | "GitHub Actions" |
+| Cloud provider | Targets the right provider from the start | "AWS" or "GCP" |
+| Kubernetes usage | Determines whether to target existing K8s or provision new compute | "EKS with Helm" |
+| What the project does | General understanding for architecture fit | "E-commerce API, ~50k MAU" |
 
-**Cloud provider detection** — look for signals:
+**NEVER include:**
+- **Credentials or secrets** -- No API keys, tokens, passwords, private keys, or `.env` values
+- **PII** -- No usernames, emails, or personally identifiable information
+- **Source code** -- Only metadata summaries, never file contents
+- **Internal URLs or IPs** -- Omit specific internal hostnames, IPs, or endpoint URLs
 
-| Signal | Indicates |
-|---|---|
-| `*.tf` with `provider "aws"` or `aws_*` resources | AWS |
-| `*.tf` with `provider "google"` or `google_*` resources | GCP |
-| `aws-sdk`, `@aws-sdk/*`, `boto3`, `aws-cdk-lib` in deps | AWS |
-| `@google-cloud/*`, `google-cloud-*` in deps | GCP |
-| CI/CD with `aws-actions/*`, `configure-aws-credentials` | AWS |
-| CI/CD with `google-github-actions/*`, `workload_identity_provider` | GCP |
-
-**Architecture detection** — look for patterns:
-
-| Pattern | What it tells Riley |
-|---|---|
-| Multiple `Dockerfile`s or `docker-compose.yml` services | Microservices architecture |
-| Single `Dockerfile` | Monolithic or simple service |
-| `k8s/` manifests | Already using Kubernetes |
-| API route files (`routes/`, `controllers/`, `handlers/`) | API service — count endpoints |
-| Database migration files (`migrations/`, `alembic/`) | Database schema complexity |
-| Queue/worker files (`workers/`, `jobs/`, `tasks/`) | Async processing needs |
-| WebSocket or real-time code | Real-time infrastructure needs |
-
-**Format the context string:**
+**Format:**
 
 ```
 IDE: Claude Code
-Language/Runtime: <detected>
-Framework: <detected>
-Databases/Services: <detected from deps and config>
-Target Cloud: <detected with evidence>
-Infrastructure: <existing IaC, containers, k8s>
-CI/CD: <detected>
-Architecture: <monolith/microservices/serverless, number of services>
-Scale Indicators: <any traffic/user numbers from README or config>
+Language/Runtime: <if known>
+Framework: <if known>
+Databases/Services: <if known>
+Target Cloud: <if known>
+Infrastructure: <if known>
+CI/CD: <if known>
 ```
 
-Only include lines where something was detected. Always include the IDE line.
+Only include lines where you have information. Keep it general and anonymized.
+
+**Before sending**, show the summary to the user and confirm: "I'd like to share this project summary with Riley so it can tailor its recommendations -- does this look right?" If they decline or want to edit it, respect that. If you don't have enough context, skip `project_context` entirely -- Riley will ask discovery questions instead.
 
 ## Step 2: Start the Session
 
 Call `convoopen` with:
-- `project_context`: The context string you built above
+- `project_context`: The summary you confirmed with the user (omit if skipped). Must not contain credentials, secrets, PII, source code, or internal URLs.
 - `source`: `"claude-code"`
 
 If the user provided arguments with the `/insideout` command, also call `convoreply` immediately after `convoopen` with the user's description as the message.
